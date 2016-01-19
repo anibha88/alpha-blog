@@ -65,7 +65,13 @@ class UsersController < ApplicationController
   end
 
   def require_admin
-    if logged_in? and !current_user.admin?
+    user = User.find(params[:id])
+    if logged_in? and user == current_user
+      flash[:danger]="You cannot delete your profile"
+      redirect_to root_path
+    end
+    
+    if logged_in? and !current_user.admin? 
       flash[:danger]="Only admin users can perform this action"
       redirect_to root_path
     end
